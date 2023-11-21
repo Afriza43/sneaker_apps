@@ -196,7 +196,7 @@ class _CartPageState extends State<CartPage> {
                                                   fontSize: 17.0,
                                                   fontWeight: FontWeight.bold)),
                                           Text(
-                                              'Rp. ' +
+                                              'Rp ' +
                                                   NumberFormat.currency(
                                                           locale: 'ID',
                                                           symbol: "",

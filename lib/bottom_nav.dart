@@ -47,7 +47,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
       ),
       bottomNavigationBar: BottomBar(
         selectedIndex: _currentIndex,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.white70,
         mainAxisAlignment: MainAxisAlignment.center,
         onTap: (int index) {
           _pageController.jumpToPage(index);
@@ -57,35 +57,35 @@ class _BottomNavigationState extends State<BottomNavigation> {
           BottomBarItem(
             icon: Icon(
               Icons.home,
-              color: _currentIndex == 0 ? Colors.white : Colors.grey,
+              color: _currentIndex == 0 ? Colors.black87 : Colors.grey,
             ),
             activeColor: Colors.transparent,
           ),
           BottomBarItem(
             icon: Icon(
               Icons.shopping_cart_rounded,
-              color: _currentIndex == 1 ? Colors.white : Colors.grey,
+              color: _currentIndex == 1 ? Colors.black87 : Colors.grey,
             ),
             activeColor: Colors.transparent,
           ),
           BottomBarItem(
             icon: Icon(
               Icons.history,
-              color: _currentIndex == 2 ? Colors.white : Colors.grey,
+              color: _currentIndex == 2 ? Colors.black87 : Colors.grey,
             ),
             activeColor: Colors.transparent,
           ),
           BottomBarItem(
             icon: Icon(
               Icons.person,
-              color: _currentIndex == 3 ? Colors.white : Colors.grey,
+              color: _currentIndex == 3 ? Colors.black87 : Colors.grey,
             ),
             activeColor: Colors.transparent,
           ),
           BottomBarItem(
             icon: Icon(
               Icons.message,
-              color: _currentIndex == 4 ? Colors.white : Colors.grey,
+              color: _currentIndex == 4 ? Colors.black87 : Colors.grey,
             ),
             activeColor: Colors.transparent,
           ),

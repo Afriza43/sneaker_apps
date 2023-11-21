@@ -155,7 +155,7 @@ class _DetailSneakersState extends State<DetailSneakers> {
                         selectedCurrency == 'IDR'
                             ? NumberFormat.currency(
                                     locale: 'ID',
-                                    symbol: "Rp",
+                                    symbol: "Rp ",
                                     decimalDigits: 0)
                                 .format(_harga)
                                 .toString()

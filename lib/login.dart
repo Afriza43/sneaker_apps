@@ -54,16 +54,37 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               const SizedBox(height: 62),
               Lottie.asset(
-                "./assets/lottie/pc.json",
+                "./assets/lottie/sneaker_log.json",
                 width: 300,
                 height: 250,
               ),
-              Text(
-                "Selamat Datang",
-                style: GoogleFonts.poppins(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Welcome to ",
+                    style: GoogleFonts.poppins(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    "Snea",
+                    style: GoogleFonts.poppins(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                    ),
+                  ),
+                  Text(
+                    "Ky",
+                    style: GoogleFonts.poppins(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.orangeAccent,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 20),
               Padding(
@@ -72,7 +93,24 @@ class _LoginPageState extends State<LoginPage> {
                   controller: _username,
                   decoration: InputDecoration(
                     labelText: "Username",
-                    labelStyle: GoogleFonts.poppins(),
+                    labelStyle: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide:
+                          BorderSide(color: Colors.orangeAccent, width: 2.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide(color: Colors.deepOrange),
+                    ),
+                    // You can customize other properties based on your preference
                   ),
                 ),
               ),
@@ -84,7 +122,24 @@ class _LoginPageState extends State<LoginPage> {
                   obscureText: true,
                   decoration: InputDecoration(
                     labelText: "Password",
-                    labelStyle: GoogleFonts.poppins(),
+                    labelStyle: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide:
+                          BorderSide(color: Colors.orangeAccent, width: 2.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide(color: Colors.deepOrange),
+                    ),
+                    // You can customize other properties based on your preference
                   ),
                 ),
               ),
@@ -92,6 +147,12 @@ class _LoginPageState extends State<LoginPage> {
                 height: 32,
               ),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                ),
                 onPressed: () async {
                   String username = _username.text;
                   String password = _password.text;
@@ -118,14 +179,19 @@ class _LoginPageState extends State<LoginPage> {
                           "Password Salah",
                           style: TextStyle(color: Colors.white),
                         ),
-                        backgroundColor: Colors.red,
+                        backgroundColor: Colors.white,
                       ),
                     );
                   }
                 },
                 child: Text(
                   "Login",
-                  style: GoogleFonts.poppins(),
+                  style: GoogleFonts.poppins(
+                    textStyle: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18.0,
+                    ),
+                  ),
                 ),
               ),
               TextButton(
@@ -136,9 +202,24 @@ class _LoginPageState extends State<LoginPage> {
                     return const RegisterPage();
                   }));
                 },
-                child: Text(
-                  "Buat Akun",
-                  style: GoogleFonts.poppins(),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Have no account? ",
+                      style: GoogleFonts.poppins(
+                        textStyle:
+                            TextStyle(color: Colors.black87, fontSize: 16),
+                      ),
+                    ),
+                    Text(
+                      "Register here",
+                      style: GoogleFonts.poppins(
+                        textStyle:
+                            TextStyle(color: Colors.indigo, fontSize: 16),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

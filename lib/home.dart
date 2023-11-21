@@ -173,13 +173,19 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   SizedBox(height: 15),
                                   Text(
-                                    "Rp ${filteredSneakers![index].harga}",
-                                    style: GoogleFonts.montserrat(
-                                      color: Color.fromARGB(255, 0, 0, 0),
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                                      'Rp ' +
+                                          NumberFormat.currency(
+                                                  locale: 'ID',
+                                                  symbol: "",
+                                                  decimalDigits: 0)
+                                              .format(int.parse(
+                                                  filteredSneakers![index]
+                                                      .harga))
+                                              .toString(),
+                                      style: GoogleFonts.montserrat(
+                                          color: Colors.black54,
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.bold)),
                                   SizedBox(height: 12)
                                 ],
                               ),

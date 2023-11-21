@@ -25,17 +25,17 @@ class _RegisterPageState extends State<RegisterPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 62),
-              // Lottie.asset(
-              //   "./assets/lottie/register.json",
-              //   width: 300,
-              //   height: 250,
-              // ),
               Text(
-                "Buat Akun",
+                "Register ",
                 style: GoogleFonts.poppins(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
+              ),
+              Lottie.asset(
+                "./assets/lottie/register.json",
+                width: 300,
+                height: 250,
               ),
               const SizedBox(height: 20),
               Padding(
@@ -44,7 +44,24 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: _username,
                   decoration: InputDecoration(
                     labelText: "Username",
-                    labelStyle: GoogleFonts.poppins(),
+                    labelStyle: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide:
+                          BorderSide(color: Colors.orangeAccent, width: 2.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide(color: Colors.deepOrange),
+                    ),
+                    // You can customize other properties based on your preference
                   ),
                 ),
               ),
@@ -56,7 +73,24 @@ class _RegisterPageState extends State<RegisterPage> {
                   obscureText: true,
                   decoration: InputDecoration(
                     labelText: "Password",
-                    labelStyle: GoogleFonts.poppins(),
+                    labelStyle: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide:
+                          BorderSide(color: Colors.orangeAccent, width: 2.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide(color: Colors.deepOrange),
+                    ),
+                    // You can customize other properties based on your preference
                   ),
                 ),
               ),
@@ -68,7 +102,24 @@ class _RegisterPageState extends State<RegisterPage> {
                   obscureText: true,
                   decoration: InputDecoration(
                     labelText: "Confirm Password",
-                    labelStyle: GoogleFonts.poppins(),
+                    labelStyle: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide:
+                          BorderSide(color: Colors.orangeAccent, width: 2.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide(color: Colors.deepOrange),
+                    ),
+                    // You can customize other properties based on your preference
                   ),
                 ),
               ),
@@ -76,6 +127,12 @@ class _RegisterPageState extends State<RegisterPage> {
                 height: 32,
               ),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                ),
                 onPressed: () {
                   // Implement your registration logic here
                   // You can validate the inputs and save them to your database
@@ -83,19 +140,40 @@ class _RegisterPageState extends State<RegisterPage> {
                 },
                 child: Text(
                   "Register",
-                  style: GoogleFonts.poppins(),
+                  style: GoogleFonts.poppins(
+                    textStyle: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18.0,
+                    ),
+                  ),
                 ),
               ),
               TextButton(
                 onPressed: () {
+                  // Navigate to the login page
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) {
                     return const LoginPage();
                   }));
                 },
-                child: Text(
-                  "Sudah punya akun? Login disini",
-                  style: GoogleFonts.poppins(),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Sudah punya akun? ",
+                      style: GoogleFonts.poppins(
+                        textStyle:
+                            TextStyle(color: Colors.black87, fontSize: 16),
+                      ),
+                    ),
+                    Text(
+                      "Login disini",
+                      style: GoogleFonts.poppins(
+                        textStyle:
+                            TextStyle(color: Colors.indigo, fontSize: 16),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

@@ -116,7 +116,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                                           FontWeight.bold),
                                                 ),
                                                 Text(
-                                                  'Rp. ' +
+                                                  'Rp ' +
                                                       NumberFormat.currency(
                                                               locale: 'ID',
                                                               symbol: "",

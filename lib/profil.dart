@@ -111,7 +111,14 @@ class _ProfilePageState extends State<ProfilePage> {
                 color: Colors.black87,
               )),
           const SizedBox(height: 25),
-          OutlinedButton(
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(32.0),
+                ),
+              ),
               onPressed: () {
                 logindata.setBool("login", true);
                 Navigator.pushReplacement(context,
@@ -119,10 +126,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   return LoginPage();
                 }));
               },
-              child: const Text(
+              child: Text(
                 'Logout',
-                style: TextStyle(
-                  color: Colors.black87,
+                style: GoogleFonts.poppins(
+                  color: Colors.white,
+                  fontSize: 18.0,
                 ),
               ))
         ],
