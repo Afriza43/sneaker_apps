@@ -1,10 +1,15 @@
+// profile_page.dart
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sneaker_apps/edit_profile.dart';
+import 'package:sneaker_apps/helper/dbhelper.dart';
 import 'package:sneaker_apps/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sneaker_apps/models/UserModel.dart';
+import 'package:sqflite/sqflite.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -15,7 +20,11 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   late SharedPreferences logindata;
-  late String username;
+  late String username = "";
+  List<Users> userList = [];
+
+  DBHelper dbHelper = DBHelper();
+
   @override
   void initState() {
     super.initState();
@@ -27,6 +36,22 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() {
       username = logindata.getString('username')!;
     });
+    getUsers();
+  }
+
+  Future<List<Users>> getUsers() async {
+    final Future<Database> dbFuture = dbHelper.initDb();
+    dbFuture.then((database) {
+      Future<List<Users>> userListFuture = dbHelper.getUsers(username);
+      userListFuture.then((_userList) {
+        if (mounted) {
+          setState(() {
+            userList = _userList;
+          });
+        }
+      });
+    });
+    return userList;
   }
 
   final double coverHeight = 280;
@@ -65,30 +90,215 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        body: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            buildTop(),
-            buildContent(),
-          ],
-        ));
+      appBar: AppBar(
+        backgroundColor: Colors.black87,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return EditProfile();
+              }));
+            },
+            icon: const Icon(
+              Icons.edit,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+      backgroundColor: Colors.white,
+      body: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          buildTop(),
+          buildContent(),
+          Container(
+            width: double.infinity,
+            child: FutureBuilder<List<Users>>(
+              future: getUsers(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text("Error: ${snapshot.error}");
+                } else if (snapshot.hasData) {
+                  return Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Card(
+                      elevation: 4,
+                      margin: EdgeInsets.symmetric(horizontal: 8),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Full Name",
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black54,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              userList[0].fullName ?? "Unknown",
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                } else {
+                  return Text("No data");
+                }
+              },
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            child: FutureBuilder<List<Users>>(
+              future: getUsers(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text("Error: ${snapshot.error}");
+                } else if (snapshot.hasData) {
+                  return Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Card(
+                      elevation: 4,
+                      margin: EdgeInsets.symmetric(horizontal: 8),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Phone Number",
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black54,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              userList[0].phone ?? "Unknown",
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                } else {
+                  return Text("No data");
+                }
+              },
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            child: FutureBuilder<List<Users>>(
+              future: getUsers(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text("Error: ${snapshot.error}");
+                } else if (snapshot.hasData) {
+                  return Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Card(
+                      elevation: 4,
+                      margin: EdgeInsets.symmetric(horizontal: 8),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Password",
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black54,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              userList[0].userPassword ?? "Unknown",
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                } else {
+                  return Text("No data");
+                }
+              },
+            ),
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          logindata.setBool('login', true);
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) {
+            return LoginPage();
+          }));
+        },
+        backgroundColor: Colors.red,
+        tooltip: 'Logout',
+        child: Icon(
+          Icons.exit_to_app,
+          color: Colors.white,
+        ),
+      ),
+    );
   }
 
   Widget buildTop() {
     final bottom = profileHeight / 2;
-    final top = coverHeight - profileHeight / 2;
+    final top = coverHeight - profileHeight / 1.3;
 
     return Stack(
       clipBehavior: Clip.none,
       alignment: Alignment.center,
       children: [
         Container(
+          height: 125,
           margin: EdgeInsets.only(bottom: bottom),
-          child: buildCoverImage(),
+          color: Colors.black87,
         ),
         Positioned(
           top: top,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.white,
+                  offset: Offset(0, 30),
+                ),
+              ],
+            ),
+            height: 400,
+            width: MediaQuery.of(context).size.width,
+            padding: EdgeInsets.symmetric(horizontal: 16),
+          ),
+        ),
+        Positioned(
+          top: top - 120,
           child: imageProfile(),
         ),
       ],
@@ -97,42 +307,15 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget buildContent() => Column(
         children: [
-          const SizedBox(height: 20),
-          Text("Afriza Meidio A",
-              style: GoogleFonts.poppins(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              )),
-          const SizedBox(height: 5),
-          Text("124210043",
-              style: GoogleFonts.poppins(
-                fontSize: 25,
-                color: Colors.black87,
-              )),
-          const SizedBox(height: 25),
-          ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                elevation: 5,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(32.0),
-                ),
-              ),
-              onPressed: () {
-                logindata.setBool('login', true);
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) {
-                  return LoginPage();
-                }));
-              },
-              child: Text(
-                'Logout',
-                style: GoogleFonts.poppins(
-                  color: Colors.white,
-                  fontSize: 18.0,
-                ),
-              ))
+          Text(
+            "Hello, " + username,
+            style: GoogleFonts.poppins(
+              fontSize: 40,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+          const SizedBox(height: 15),
         ],
       );
 
@@ -171,47 +354,46 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget bottomSheet() {
     return Container(
-      height: 100.0,
+      height: 120.0,
       width: MediaQuery.of(context).size.width,
       margin: const EdgeInsets.symmetric(
         horizontal: 20,
         vertical: 20,
       ),
-      child: Column(children: <Widget>[
-        const Text(
-          "Choose Profile Photo",
-          style: TextStyle(
-            fontSize: 20.0,
+      child: Column(
+        children: <Widget>[
+          const Text(
+            "Choose Profile Photo",
+            style: TextStyle(
+              fontSize: 20.0,
+            ),
           ),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        Row(children: <Widget>[
-          TextButton.icon(
-              icon: const Icon(Icons.camera),
-              onPressed: () {
-                pickImageC();
-              },
-              label: const Text("Camera")),
-          TextButton.icon(
-              icon: const Icon(Icons.image),
-              onPressed: () {
-                pickImage();
-              },
-              label: const Text("Gallery")),
-        ])
-      ]),
+          const SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              TextButton.icon(
+                icon: const Icon(Icons.camera),
+                onPressed: () {
+                  pickImageC();
+                  Navigator.pop(context);
+                },
+                label: const Text("Camera"),
+              ),
+              TextButton.icon(
+                icon: const Icon(Icons.image),
+                onPressed: () {
+                  pickImage();
+                  Navigator.pop(context);
+                },
+                label: const Text("Gallery"),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
-
-  Widget buildCoverImage() => Container(
-        color: Colors.grey,
-        child: Image.network(
-          "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y29kaW5nfGVufDB8fDB8fHww",
-          width: double.infinity,
-          height: coverHeight,
-          fit: BoxFit.cover,
-        ),
-      );
 }

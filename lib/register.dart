@@ -195,6 +195,8 @@ class _RegisterPageState extends State<RegisterPage> {
                         db
                             .signUp(Users(
                           userName: _username.text,
+                          fullName: "",
+                          phone: "",
                           userPassword: hashedPassword,
                         ))
                             .whenComplete(() {

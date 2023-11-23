@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sneaker_apps/helper/dbhistory.dart';
 import 'package:sneaker_apps/models/HistoryModel.dart';
 import 'package:sqflite/sqflite.dart';
@@ -13,17 +14,27 @@ class HistoryPage extends StatefulWidget {
 class _HistoryPageState extends State<HistoryPage> {
   HistoryDBHelper dbHelper = HistoryDBHelper();
   List<History> historyList = [];
+  late String userName = '';
 
   @override
   void initState() {
     super.initState();
+    getLoginData();
+  }
+
+  void getLoginData() async {
+    SharedPreferences logindata = await SharedPreferences.getInstance();
+    setState(() {
+      userName = logindata.getString('username') ?? "";
+    });
     getHistory();
   }
 
   Future<List<History>> getHistory() async {
     final Future<Database> dbHistoryFuture = dbHelper.initHistoryDb();
     dbHistoryFuture.then((historyDatabase) {
-      final Future<List<History>> historyListFuture = dbHelper.getHistory();
+      final Future<List<History>> historyListFuture =
+          dbHelper.getHistory(userName);
       historyListFuture.then((_historyList) {
         if (mounted) {
           setState(() {

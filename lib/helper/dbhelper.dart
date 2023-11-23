@@ -19,7 +19,9 @@ class DBHelper {
 
   Future<Database> initDb() async {
     io.Directory directory = await getApplicationDocumentsDirectory();
-    String path = directory.path + 'toko7.db';
+
+    String path = directory.path + 'toko9.db';
+
     var sneakerDatabase = openDatabase(path, version: 1, onCreate: _createDb);
     return sneakerDatabase;
   }
@@ -27,19 +29,22 @@ class DBHelper {
   void _createDb(Database db, int version) async {
     await db.execute('''
       CREATE TABLE sneaker (
-        id TEXT PRIMARY KEY,
+        id TEXT NOT NULL,
         nama TEXT,
         harga TEXT,
         gambar TEXT,
         tipe TEXT,
         deskripsi TEXT,
-        jumlah INTEGER
+        jumlah INTEGER,
+        userName TEXT
       )
     ''');
 
     await db.execute('''
       CREATE TABLE akun (
-        userName TEXT PRIMARY KEY, 
+        userName TEXT PRIMARY KEY,
+        fullName TEXT,
+        phone TEXT, 
         userPassword TEXT)
     ''');
   }
@@ -76,18 +81,49 @@ class DBHelper {
     return db.insert('akun', user.toMap());
   }
 
-  Future<List<Map<String, dynamic>>> selectkeranjang() async {
+  Future<List<Map<String, dynamic>>> selectkeranjang(String userName) async {
     Database db = await database;
-    var mapList = await db.query('sneaker');
+    var mapList =
+        await db.query('sneaker', where: 'userName = ?', whereArgs: [userName]);
     return mapList;
   }
 
-  Future<List<Cart>> getCart() async {
-    var mapList = await selectkeranjang();
+  Future<List<Cart>> getCart(String userName) async {
+    var mapList = await selectkeranjang(userName);
     int count = mapList.length;
     List<Cart> list = [];
     for (int i = 0; i < count; i++) {
       list.add(Cart.fromMap(mapList[i]));
+    }
+    return list;
+  }
+
+  Future<Map<String, dynamic>> getUserProfileById(String userName) async {
+    Database db = await initDb();
+
+    var result =
+        await db.query("akun", where: 'userName = ?', whereArgs: [userName]);
+
+    if (result.isNotEmpty) {
+      return result.first;
+    } else {
+      return {};
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> selectUser(String userName) async {
+    Database db = await database;
+    var mapList =
+        await db.query('akun', where: 'userName = ?', whereArgs: [userName]);
+    return mapList;
+  }
+
+  Future<List<Users>> getUsers(String userName) async {
+    var mapList = await selectUser(userName);
+    int count = mapList.length;
+    List<Users> list = [];
+    for (int i = 0; i < count; i++) {
+      list.add(Users.fromMap(mapList[i]));
     }
     return list;
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sneaker_apps/helper/dbhelper.dart';
 import 'package:sneaker_apps/helper/dbhistory.dart';
 import 'package:sneaker_apps/models/Cart_model.dart';
@@ -17,20 +18,28 @@ class CheckoutPage extends StatefulWidget {
 
 class _CheckoutPageState extends State<CheckoutPage> {
   HistoryDBHelper dbHelper = HistoryDBHelper();
+  late String userName = "";
+
+  @override
+  void initState() {
+    super.initState();
+    getLoginData();
+  }
+
+  void getLoginData() async {
+    SharedPreferences logindata = await SharedPreferences.getInstance();
+    setState(() {
+      userName = logindata.getString('username') ?? "";
+    });
+  }
 
   saveHistory(String nama, int subtotal, String gambar, int quantity,
-      String purchaseTime) async {
+      String purchaseTime, String userName) async {
     Database db = await dbHelper.historyDatabase;
     var batch = db.batch();
     db.execute(
-      'INSERT INTO riwayat_bayar (nama, subtotal, gambar, quantity, purchaseTime) VALUES (?, ?, ?, ?, ?)',
-      [
-        nama,
-        subtotal,
-        gambar,
-        quantity,
-        purchaseTime,
-      ],
+      'INSERT INTO riwayat_bayar (nama, subtotal, gambar, quantity, purchaseTime, userName) VALUES (?, ?, ?, ?, ?, ?)',
+      [nama, subtotal, gambar, quantity, purchaseTime, userName],
     );
     await batch.commit();
   }
@@ -175,12 +184,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 onPressed: () async {
                   for (var item in widget.cartItems) {
                     await saveHistory(
-                      item.nama,
-                      int.parse(item.harga) * item.jumlah,
-                      item.gambar,
-                      item.jumlah,
-                      DateTime.now().toLocal().toString(),
-                    );
+                        item.nama,
+                        int.parse(item.harga) * item.jumlah,
+                        item.gambar,
+                        item.jumlah,
+                        DateTime.now().toLocal().toString(),
+                        item.userName);
                   }
                   await clearCart();
 
@@ -257,7 +266,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
     Database db = await dbHelper.database;
     var batch = db.batch();
     for (var item in widget.cartItems) {
-      batch.delete('sneaker', where: 'id = ?', whereArgs: [item.id]);
+      batch.delete('sneaker',
+          where: 'id = ? AND userName = ?',
+          whereArgs: [item.id, item.userName]);
     }
     await batch.commit();
   }
