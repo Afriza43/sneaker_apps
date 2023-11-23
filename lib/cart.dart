@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sneaker_apps/check_out.dart';
 import 'package:sneaker_apps/helper/dbhelper.dart';
 import 'package:sneaker_apps/models/Cart_model.dart';
@@ -20,17 +21,27 @@ class _CartPageState extends State<CartPage> {
   int _subtotal = 0;
   List<String> items = ['WIB', 'WITA', 'WIT', 'London'];
   String? selectedItem = 'WIB';
+  late String userName = '';
 
   @override
   void initState() {
     super.initState();
+
+    getLoginData();
+  }
+
+  void getLoginData() async {
+    SharedPreferences logindata = await SharedPreferences.getInstance();
+    setState(() {
+      userName = logindata.getString('username') ?? "";
+    });
     getCart();
   }
 
   Future<List<Cart>> getCart() async {
     final Future<Database> dbFuture = dbHelper.initDb();
     dbFuture.then((database) {
-      Future<List<Cart>> cartListFuture = dbHelper.getCart();
+      Future<List<Cart>> cartListFuture = dbHelper.getCart(userName);
       cartListFuture.then((_cartList) {
         if (mounted) {
           setState(() {
@@ -233,7 +244,9 @@ class _CartPageState extends State<CartPage> {
                                                         if (cartList[i].jumlah >
                                                             1) {
                                                           _kurangJmlKeranjang(
-                                                              cartList[i].id);
+                                                              cartList[i].id,
+                                                              cartList[i]
+                                                                  .userName);
                                                         }
                                                       },
                                                       child: Icon(
@@ -255,7 +268,9 @@ class _CartPageState extends State<CartPage> {
                                                     InkWell(
                                                       onTap: () {
                                                         _tambahJmlKeranjang(
-                                                            cartList[i].id);
+                                                            cartList[i].id,
+                                                            cartList[i]
+                                                                .userName);
                                                       },
                                                       child: Icon(
                                                         Icons.add,
@@ -280,7 +295,9 @@ class _CartPageState extends State<CartPage> {
                                                     child: InkWell(
                                                       onTap: () {
                                                         _deleteKeranjang(
-                                                            cartList[i].id);
+                                                            cartList[i].id,
+                                                            cartList[i]
+                                                                .userName);
                                                       },
                                                       child: Container(
                                                         height: 25,
@@ -406,31 +423,33 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  _tambahJmlKeranjang(String id) async {
+  _tambahJmlKeranjang(String id, String userName) async {
     Database db = await dbHelper.database;
     var batch = db.batch();
-    db.execute('UPDATE sneaker SET jumlah=jumlah+1 WHERE id=?', [id]);
+    db.execute('UPDATE sneaker SET jumlah=jumlah+1 WHERE id=? AND userName=?',
+        [id, userName]);
     await batch.commit();
   }
 
-  _kurangJmlKeranjang(String id) async {
+  _kurangJmlKeranjang(String id, String userName) async {
     Database db = await dbHelper.database;
     var batch = db.batch();
-    db.execute('UPDATE sneaker SET jumlah=jumlah-1 WHERE id=?', [id]);
+    db.execute('UPDATE sneaker SET jumlah=jumlah-1 WHERE id=? AND userName=?',
+        [id, userName]);
     await batch.commit();
   }
 
-  _deleteKeranjang(String id) async {
+  _deleteKeranjang(String id, String userName) async {
+    Database db = await dbHelper.database;
+    var batch = db.batch();
+    db.execute('DELETE FROM sneaker WHERE id=? AND userName=?', [id, userName]);
+    await batch.commit();
+  }
+
+  _kosongkanKeranjang(String id) async {
     Database db = await dbHelper.database;
     var batch = db.batch();
     db.execute('DELETE FROM sneaker WHERE id=?', [id]);
-    await batch.commit();
-  }
-
-  _kosongkanKeranjang() async {
-    Database db = await dbHelper.database;
-    var batch = db.batch();
-    db.execute('DELETE FROM sneaker');
     await batch.commit();
   }
 

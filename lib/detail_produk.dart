@@ -1,3 +1,4 @@
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sneaker_apps/helper/dbhelper.dart';
 import 'package:sneaker_apps/models/Cart_model.dart';
 import 'package:flutter/material.dart';
@@ -19,8 +20,23 @@ class _DetailSneakersState extends State<DetailSneakers> {
   String selectedCurrency = 'IDR';
   double exchangeRate = 1.0;
   late double _harga;
+  late SharedPreferences logindata;
+  late String userName = '';
 
   DBHelper dbHelper = DBHelper();
+
+  @override
+  void initState() {
+    super.initState();
+    getLoginData();
+  }
+
+  void getLoginData() async {
+    SharedPreferences logindata = await SharedPreferences.getInstance();
+    setState(() {
+      userName = logindata.getString('username') ?? "";
+    });
+  }
 
   Future<bool> saveOrUpdateCart(Cart cartItem) async {
     try {
@@ -28,20 +44,18 @@ class _DetailSneakersState extends State<DetailSneakers> {
 
       List<Map<String, dynamic>> result = await db.query(
         'sneaker',
-        where: 'id = ?',
-        whereArgs: [cartItem.id],
+        where: 'id = ? AND userName = ?',
+        whereArgs: [cartItem.id, cartItem.userName],
       );
 
       if (result.isNotEmpty) {
-        // If the item is in the cart, update the quantity
         await db.update(
           'sneaker',
           {'jumlah': cartItem.jumlah},
-          where: 'id = ?',
-          whereArgs: [cartItem.id],
+          where: 'id = ? AND userName = ?',
+          whereArgs: [cartItem.id, cartItem.userName],
         );
       } else {
-        // If the item is not in the cart, insert a new record
         await db.insert(
           'sneaker',
           {
@@ -52,6 +66,7 @@ class _DetailSneakersState extends State<DetailSneakers> {
             'tipe': cartItem.tipe,
             'deskripsi': cartItem.deskripsi,
             'jumlah': cartItem.jumlah,
+            'userName': cartItem.userName
           },
           conflictAlgorithm: ConflictAlgorithm.replace,
         );
@@ -289,6 +304,7 @@ class _DetailSneakersState extends State<DetailSneakers> {
                     tipe: widget.sepatu.tipe,
                     deskripsi: widget.sepatu.deskripsi,
                     jumlah: quantity,
+                    userName: userName,
                   );
 
                   // Save or update cart based on item existence
