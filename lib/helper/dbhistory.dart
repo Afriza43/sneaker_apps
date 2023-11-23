@@ -32,7 +32,8 @@ class HistoryDBHelper {
         subtotal INTEGER,
         gambar TEXT,
         quantity INTEGER,
-        purchaseTime TEXT
+        purchaseTime TEXT,
+        userName TEXT
       )
     ''');
   }
