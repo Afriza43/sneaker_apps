@@ -29,7 +29,6 @@ class _LoginPageState extends State<LoginPage> {
     List<Map<String, dynamic>> akun = await db.getAkun(_username.text);
 
     if (akun.isNotEmpty) {
-      // Assuming your password field in the database is named 'userPassword'
       String storedHashedPassword = akun[0]['userPassword'];
       print("Password di DB : " + storedHashedPassword);
 
