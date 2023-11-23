@@ -20,7 +20,7 @@ class DBHelper {
   Future<Database> initDb() async {
     io.Directory directory = await getApplicationDocumentsDirectory();
 
-    String path = directory.path + 'toko9.db';
+    String path = directory.path + 'sepatu_toko.db';
 
     var sneakerDatabase = openDatabase(path, version: 1, onCreate: _createDb);
     return sneakerDatabase;
