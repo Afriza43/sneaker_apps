@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bcrypt/bcrypt.dart';
+import 'package:sneaker_apps/helper/dbhelper.dart';
 import 'package:sneaker_apps/register.dart';
 
 class LoginPage extends StatefulWidget {
@@ -17,7 +18,48 @@ class _LoginPageState extends State<LoginPage> {
   final _username = TextEditingController();
   final _password = TextEditingController();
   late SharedPreferences logindata;
+
+  bool isLoginTrue = false;
+
   late bool newuser;
+
+  final db = DBHelper();
+
+  login() async {
+    List<Map<String, dynamic>> akun = await db.getAkun(_username.text);
+
+    if (akun.isNotEmpty) {
+      // Assuming your password field in the database is named 'userPassword'
+      String storedHashedPassword = akun[0]['userPassword'];
+      print("Password di DB : " + storedHashedPassword);
+
+      if (verifyPassword(_password.text, storedHashedPassword)) {
+        logindata.setBool("login", false);
+        logindata.setString("username", _username.text);
+
+        if (!mounted) return;
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) {
+          return const BottomNavigation();
+        }));
+      } else {
+        setState(() {
+          isLoginTrue = true;
+        });
+      }
+    } else {
+      setState(() {
+        isLoginTrue = true;
+      });
+    }
+  }
+
+// Function to verify the password
+  bool verifyPassword(String inputPassword, String storedHashedPassword) {
+    return BCrypt.checkpw(inputPassword, storedHashedPassword);
+  }
+
+  final formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -87,61 +129,73 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               ),
               const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: TextFormField(
-                  controller: _username,
-                  decoration: InputDecoration(
-                    labelText: "Username",
-                    labelStyle: GoogleFonts.poppins(
-                      textStyle: TextStyle(
-                        color: Colors.black,
+              Form(
+                key: formKey,
+                child: Column(children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: TextFormField(
+                      controller: _username,
+                      validator: (value) {
+                        if (value!.isEmpty) {}
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        labelText: "Username",
+                        labelStyle: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: BorderSide(
+                              color: Colors.orangeAccent, width: 2.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: BorderSide(color: Colors.deepOrange),
+                        ),
                       ),
                     ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide:
-                          BorderSide(color: Colors.orangeAccent, width: 2.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide: BorderSide(color: Colors.deepOrange),
-                    ),
-                    // You can customize other properties based on your preference
                   ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: TextFormField(
-                  controller: _password,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: "Password",
-                    labelStyle: GoogleFonts.poppins(
-                      textStyle: TextStyle(
-                        color: Colors.black,
+                  const SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: TextFormField(
+                      controller: _password,
+                      validator: (value) {
+                        if (value!.isEmpty) {}
+                        return null;
+                      },
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: "Password",
+                        labelStyle: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: BorderSide(
+                              color: Colors.orangeAccent, width: 2.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: BorderSide(color: Colors.deepOrange),
+                        ),
+                        // You can customize other properties based on your preference
                       ),
                     ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide:
-                          BorderSide(color: Colors.orangeAccent, width: 2.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide: BorderSide(color: Colors.deepOrange),
-                    ),
-                    // You can customize other properties based on your preference
                   ),
-                ),
+                ]),
               ),
               const SizedBox(
                 height: 32,
@@ -154,34 +208,20 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 onPressed: () async {
-                  String username = _username.text;
-                  String password = _password.text;
+                  if (formKey.currentState!.validate()) {
+                    login();
 
-                  if (password == "123") {
-                    String hashedPassword = await hashPassword(password);
-
-                    if (username == "user" &&
-                        verifyPassword(password, hashedPassword)) {
-                      print("Hashed Password: $hashedPassword");
-
-                      logindata.setBool("login", false);
-                      logindata.setString("username", username);
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) {
-                        return const BottomNavigation();
-                      }));
-                    }
-                  } else {
-                    // Show red snackbar with "Password Salah" message
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          "Password Salah",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        backgroundColor: Colors.white,
-                      ),
-                    );
+                    isLoginTrue
+                        ? ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "Wrong Username or Password",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              backgroundColor: Colors.red,
+                            ),
+                          )
+                        : const SizedBox();
                   }
                 },
                 child: Text(
@@ -197,8 +237,7 @@ class _LoginPageState extends State<LoginPage> {
               TextButton(
                 onPressed: () {
                   // Navigate to the registration page
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return const RegisterPage();
                   }));
                 },
@@ -231,12 +270,6 @@ class _LoginPageState extends State<LoginPage> {
 
   // Function to hash the password
   Future<String> hashPassword(String password) async {
-    const rounds = 12; // You can adjust the number of rounds as needed
-    return BCrypt.hashpw(password, BCrypt.gensalt(logRounds: rounds));
-  }
-
-  // Function to verify the password
-  bool verifyPassword(String password, String hashedPassword) {
-    return BCrypt.checkpw(password, hashedPassword);
+    return BCrypt.hashpw(password, BCrypt.gensalt());
   }
 }

@@ -120,7 +120,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               onPressed: () {
-                logindata.setBool("login", true);
+                logindata.setBool('login', true);
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) {
                   return LoginPage();
