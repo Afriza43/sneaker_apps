@@ -16,8 +16,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // late SharedPreferences logindata;
-  // late String username;
   String username = "";
 
   final TextEditingController _searchController = TextEditingController();
@@ -28,7 +26,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    //fetch data from API
     getData();
     initial();
   }
@@ -194,7 +191,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       );
                     } else {
-                      return Container(); // Placeholder or loading indicator can be added here
+                      return Container();
                     }
                   },
                   childCount: sneakers != null ? sneakers!.length : 0,
@@ -226,46 +223,57 @@ class _HomePageState extends State<HomePage> {
                             child: Card(
                               shape: RoundedRectangleBorder(
                                 side: const BorderSide(
-                                  color: Colors.white,
+                                  color: Colors.white70,
                                 ),
                                 borderRadius: BorderRadius.circular(20.0),
                               ),
-                              color: const Color(0xff343434),
+                              color: Colors.white70,
                               child: Column(
                                 children: [
-                                  const SizedBox(height: 15),
                                   ClipRRect(
                                     borderRadius: const BorderRadius.vertical(
-                                        top: Radius.circular(8),
-                                        bottom: Radius.circular(8)),
+                                      top: Radius.circular(20),
+                                      bottom: Radius.circular(8),
+                                    ),
                                     child: Image.network(
                                       filteredSneakers![index].gambar,
-                                      width: 100,
+                                      width: 170,
                                       height: 100,
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
-                                  const SizedBox(height: 12),
+                                  const SizedBox(height: 9),
+                                  Expanded(
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        filteredSneakers![index].nama,
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.montserrat(
+                                          color: Colors.black87,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 15),
                                   Text(
-                                    filteredSneakers![index].nama,
+                                    'Rp ' +
+                                        NumberFormat.currency(
+                                                locale: 'ID',
+                                                symbol: "",
+                                                decimalDigits: 0)
+                                            .format(int.parse(
+                                                filteredSneakers![index].harga))
+                                            .toString(),
                                     style: GoogleFonts.montserrat(
-                                      color: Colors.white,
-                                      fontSize: 13,
+                                      color: Colors.black54,
+                                      fontSize: 14.0,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  Text(
-                                    NumberFormat.currency(
-                                            locale: 'ID',
-                                            symbol: "Rp",
-                                            decimalDigits: 0)
-                                        .format(filteredSneakers![index].harga)
-                                        .toString(),
-                                    style: GoogleFonts.montserrat(
-                                      color: Colors.red,
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                                  SizedBox(height: 12),
                                 ],
                               ),
                             ),
@@ -273,8 +281,8 @@ class _HomePageState extends State<HomePage> {
                         ),
                       );
                     } else {
-                      return Container(); // Placeholder or loading indicator can be added here
-                    } // ... your existing code
+                      return Container();
+                    }
                   },
                   childCount:
                       filteredSneakers != null ? filteredSneakers!.length : 0,

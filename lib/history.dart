@@ -30,11 +30,6 @@ class _HistoryPageState extends State<HistoryPage> {
     });
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   void getLoginData() async {
     SharedPreferences logindata = await SharedPreferences.getInstance();
     setState(() {

@@ -18,7 +18,7 @@ class HistoryDBHelper {
 
   Future<Database> initHistoryDb() async {
     io.Directory directory = await getApplicationDocumentsDirectory();
-    String path = directory.path + 'purchasing.db';
+    String path = directory.path + 'purchased.db';
     var historyDatabase =
         await openDatabase(path, version: 1, onCreate: _createHistoryDb);
     return historyDatabase;

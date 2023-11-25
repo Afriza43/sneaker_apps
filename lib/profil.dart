@@ -1,9 +1,9 @@
-// profile_page.dart
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart'; // Import package path_provider
 import 'package:sneaker_apps/edit_profile.dart';
 import 'package:sneaker_apps/helper/dbhelper.dart';
 import 'package:sneaker_apps/login.dart';
@@ -74,7 +74,19 @@ class _ProfilePageState extends State<ProfilePage> {
 
       final imageTemp = File(image.path);
 
-      editFoto(imageTemp.path, username);
+      // Dapatkan path direktori penyimpanan eksternal
+      Directory? appDocDir = await getExternalStorageDirectory();
+      String appDocPath = appDocDir!.path;
+
+      // Buat path tujuan untuk file gambar
+      String destinationPath =
+          '$appDocPath/${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+      // Salin file gambar ke path tujuan
+      await imageTemp.copy(destinationPath);
+
+      // Update path gambar dalam database
+      editFoto(destinationPath, username);
 
       setState(() => this.image = imageTemp);
     } on PlatformException catch (e) {
@@ -90,7 +102,20 @@ class _ProfilePageState extends State<ProfilePage> {
 
       final imageTemp = File(image.path);
 
-      editFoto(imageTemp.path, username);
+      // Mendapatkan path direktori penyimpanan eksternal
+      final Directory? appDocDir = await getExternalStorageDirectory();
+      final String appDocPath = appDocDir!.path;
+
+      // Membuat path untuk menyimpan gambar di penyimpanan eksternal
+      final String destinationPath =
+          '$appDocPath/${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final File destinationFile = File(destinationPath);
+      await imageTemp.copy(destinationPath);
+
+      print('Path direktori penyimpanan eksternal: $appDocPath');
+
+      // Update path gambar dalam database
+      editFoto(destinationPath, username);
 
       setState(() => this.image = imageTemp);
     } on PlatformException catch (e) {
@@ -348,7 +373,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 : (userList.isNotEmpty &&
                         userList[0].gambar != null &&
                         userList[0].gambar!.isNotEmpty)
-                    ? AssetImage(userList[0].gambar!) as ImageProvider<Object>
+                    ? FileImage(File(userList[0].gambar!))
+                        as ImageProvider<Object>
                     : const AssetImage('assets/image/user_profile.png')
                         as ImageProvider<Object>,
           ),
