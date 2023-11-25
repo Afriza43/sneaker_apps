@@ -75,6 +75,7 @@ flutter:
     - assets/lottie/edit_profile.json
     - assets/lottie/cart_empty.json
     - assets/lottie/no_history.json
+    - assets/image/user_profile.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

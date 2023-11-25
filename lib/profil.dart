@@ -22,6 +22,7 @@ class _ProfilePageState extends State<ProfilePage> {
   late SharedPreferences logindata;
   late String username = "";
   List<Users> userList = [];
+  bool _isLoading = true;
 
   DBHelper dbHelper = DBHelper();
 
@@ -29,6 +30,12 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
     initial();
+
+    Future.delayed(const Duration(seconds: 1), () {
+      setState(() {
+        _isLoading = false;
+      });
+    });
   }
 
   void initial() async {
@@ -67,6 +74,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
       final imageTemp = File(image.path);
 
+      editFoto(imageTemp.path, username);
+
       setState(() => this.image = imageTemp);
     } on PlatformException catch (e) {
       print('Failed to pick image: $e');
@@ -80,6 +89,8 @@ class _ProfilePageState extends State<ProfilePage> {
       if (image == null) return;
 
       final imageTemp = File(image.path);
+
+      editFoto(imageTemp.path, username);
 
       setState(() => this.image = imageTemp);
     } on PlatformException catch (e) {
@@ -107,148 +118,155 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       ),
       backgroundColor: Colors.white,
-      body: ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          buildTop(),
-          buildContent(),
-          Container(
-            width: double.infinity,
-            child: FutureBuilder<List<Users>>(
-              future: getUsers(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text("Error: ${snapshot.error}");
-                } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                  return Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Card(
-                      elevation: 4,
-                      margin: EdgeInsets.symmetric(horizontal: 8),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Full Name",
-                              style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black54,
+      body: _isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : ListView(
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                buildTop(),
+                buildContent(),
+                Container(
+                  width: double.infinity,
+                  child: FutureBuilder<List<Users>>(
+                    future: getUsers(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Text("Error: ${snapshot.error}");
+                      } else if (snapshot.hasData &&
+                          snapshot.data!.isNotEmpty) {
+                        return Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Card(
+                            elevation: 4,
+                            margin: EdgeInsets.symmetric(horizontal: 8),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Full Name",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    snapshot.data![0].fullName ?? "Unknown",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            const SizedBox(height: 8),
-                            Text(
-                              snapshot.data![0].fullName ?? "Unknown",
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.black,
+                          ),
+                        );
+                      } else {
+                        return Text("No data");
+                      }
+                    },
+                  ),
+                ),
+                Container(
+                  width: double.infinity,
+                  child: FutureBuilder<List<Users>>(
+                    future: getUsers(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Text("Error: ${snapshot.error}");
+                      } else if (snapshot.hasData &&
+                          snapshot.data!.isNotEmpty) {
+                        return Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Card(
+                            elevation: 4,
+                            margin: EdgeInsets.symmetric(horizontal: 8),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Phone Number",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    userList[0].phone ?? "Unknown",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                } else {
-                  return Text("No data");
-                }
-              },
+                          ),
+                        );
+                      } else {
+                        return Text("No data");
+                      }
+                    },
+                  ),
+                ),
+                Container(
+                  width: double.infinity,
+                  child: FutureBuilder<List<Users>>(
+                    future: getUsers(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Text("Error: ${snapshot.error}");
+                      } else if (snapshot.hasData &&
+                          snapshot.data!.isNotEmpty) {
+                        return Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Card(
+                            elevation: 4,
+                            margin: EdgeInsets.symmetric(horizontal: 8),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Password",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    userList[0].userPassword ?? "Unknown",
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return Text("No data");
+                      }
+                    },
+                  ),
+                ),
+              ],
             ),
-          ),
-          Container(
-            width: double.infinity,
-            child: FutureBuilder<List<Users>>(
-              future: getUsers(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text("Error: ${snapshot.error}");
-                } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                  return Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Card(
-                      elevation: 4,
-                      margin: EdgeInsets.symmetric(horizontal: 8),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Phone Number",
-                              style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black54,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              userList[0].phone ?? "Unknown",
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                } else {
-                  return Text("No data");
-                }
-              },
-            ),
-          ),
-          Container(
-            width: double.infinity,
-            child: FutureBuilder<List<Users>>(
-              future: getUsers(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text("Error: ${snapshot.error}");
-                } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                  return Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Card(
-                      elevation: 4,
-                      margin: EdgeInsets.symmetric(horizontal: 8),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Password",
-                              style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black54,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              userList[0].userPassword ?? "Unknown",
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                } else {
-                  return Text("No data");
-                }
-              },
-            ),
-          ),
-        ],
-      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           logindata.setBool('login', true);
@@ -327,8 +345,12 @@ class _ProfilePageState extends State<ProfilePage> {
             radius: profileHeight / 2,
             backgroundImage: image != null
                 ? FileImage(image!) as ImageProvider<Object>
-                : AssetImage('assets/image/foto_profil.jpg')
-                    as ImageProvider<Object>,
+                : (userList.isNotEmpty &&
+                        userList[0].gambar != null &&
+                        userList[0].gambar!.isNotEmpty)
+                    ? AssetImage(userList[0].gambar!) as ImageProvider<Object>
+                    : const AssetImage('assets/image/user_profile.png')
+                        as ImageProvider<Object>,
           ),
           Positioned(
             bottom: 20.0,
@@ -395,5 +417,12 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       ),
     );
+  }
+
+  editFoto(String gambar, String username) async {
+    Database db = await dbHelper.database;
+    var batch = db.batch();
+    db.execute('UPDATE akun SET gambar=? WHERE userName=?', [gambar, username]);
+    await batch.commit();
   }
 }

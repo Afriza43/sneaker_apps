@@ -194,11 +194,11 @@ class _RegisterPageState extends State<RegisterPage> {
                             await hashPassword(_password.text);
                         db
                             .signUp(Users(
-                          userName: _username.text,
-                          fullName: "",
-                          phone: "",
-                          userPassword: hashedPassword,
-                        ))
+                                userName: _username.text,
+                                fullName: "",
+                                phone: "",
+                                userPassword: hashedPassword,
+                                gambar: ""))
                             .whenComplete(() {
                           Navigator.pop(context);
                           print("REGISTER SUCCESS");

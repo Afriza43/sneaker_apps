@@ -16,11 +16,23 @@ class _HistoryPageState extends State<HistoryPage> {
   HistoryDBHelper dbHelper = HistoryDBHelper();
   List<History> historyList = [];
   late String userName = '';
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
     getLoginData();
+
+    Future.delayed(const Duration(seconds: 1), () {
+      setState(() {
+        _isLoading = false;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   void getLoginData() async {
@@ -51,10 +63,24 @@ class _HistoryPageState extends State<HistoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Purchase History'),
+        centerTitle: true,
+        title: Text(
+          'Purchase History',
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.bold,
+            fontSize: 30.0,
+            color: Colors.black87,
+          ),
+        ),
         backgroundColor: Colors.white,
       ),
-      body: historyList.isEmpty ? _emptyHistory() : _historyItem(),
+      body: _isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : historyList.isEmpty
+              ? _emptyHistory()
+              : _historyItem(),
       backgroundColor: Colors.white,
     );
   }
