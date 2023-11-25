@@ -74,18 +74,14 @@ class _ProfilePageState extends State<ProfilePage> {
 
       final imageTemp = File(image.path);
 
-      // Dapatkan path direktori penyimpanan eksternal
       Directory? appDocDir = await getExternalStorageDirectory();
       String appDocPath = appDocDir!.path;
 
-      // Buat path tujuan untuk file gambar
       String destinationPath =
           '$appDocPath/${DateTime.now().millisecondsSinceEpoch}.jpg';
 
-      // Salin file gambar ke path tujuan
       await imageTemp.copy(destinationPath);
 
-      // Update path gambar dalam database
       editFoto(destinationPath, username);
 
       setState(() => this.image = imageTemp);
@@ -102,19 +98,14 @@ class _ProfilePageState extends State<ProfilePage> {
 
       final imageTemp = File(image.path);
 
-      // Mendapatkan path direktori penyimpanan eksternal
-      final Directory? appDocDir = await getExternalStorageDirectory();
-      final String appDocPath = appDocDir!.path;
+      Directory? appDocDir = await getExternalStorageDirectory();
+      String appDocPath = appDocDir!.path;
 
-      // Membuat path untuk menyimpan gambar di penyimpanan eksternal
-      final String destinationPath =
+      String destinationPath =
           '$appDocPath/${DateTime.now().millisecondsSinceEpoch}.jpg';
-      final File destinationFile = File(destinationPath);
+
       await imageTemp.copy(destinationPath);
 
-      print('Path direktori penyimpanan eksternal: $appDocPath');
-
-      // Update path gambar dalam database
       editFoto(destinationPath, username);
 
       setState(() => this.image = imageTemp);
