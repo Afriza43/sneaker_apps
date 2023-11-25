@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sneaker_apps/helper/dbhistory.dart';
 import 'package:sneaker_apps/models/HistoryModel.dart';
@@ -226,14 +227,20 @@ class _HistoryPageState extends State<HistoryPage> {
         Expanded(
           child: Center(
             child: Container(
-              padding: EdgeInsets.all(25.0),
+              padding: EdgeInsets.all(20.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  Lottie.asset(
+                    'assets/lottie/no_history.json',
+                    width: 330,
+                    height: 280,
+                  ),
                   Text(
-                    'Purchase History is Empty',
-                    style: TextStyle(fontSize: 18),
+                    'No History',
+                    style: GoogleFonts.poppins(
+                        fontSize: 28, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),

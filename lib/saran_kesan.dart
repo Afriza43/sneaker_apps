@@ -59,7 +59,7 @@ class SaranKesan extends StatelessWidget {
                 elevation: 3,
                 child: ListTile(
                   title: Text(
-                    "Kelasnya tidak membosankan, tapi kadang bikin panik (contoh: ujian UAS di kelas kemarin). Seru tiap sesi presentasi, bisa lihat orang bingung sama kerjaan sendiri HAHAHA",
+                    "Kelasnya tidak membosankan, tapi kadang bikin panik (contoh: ujian UAS di kelas kemarin). Seru tiap sesi presentasi, bisa lihat orang panik :D",
                     style: GoogleFonts.poppins(
                       fontSize: 16.0,
                       color: Colors.black,

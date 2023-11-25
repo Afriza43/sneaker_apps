@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sneaker_apps/bottom_nav.dart';
+import 'package:sneaker_apps/login.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.black87),
         useMaterial3: true,
       ),
-      home: const BottomNavigation(),
+      home: const LoginPage(),
     );
   }
 }

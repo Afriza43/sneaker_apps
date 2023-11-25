@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sneaker_apps/check_out.dart';
 import 'package:sneaker_apps/helper/dbhelper.dart';
@@ -389,22 +390,27 @@ class _CartPageState extends State<CartPage> {
                             children: <Widget>[
                               Expanded(
                                 child: Center(
-                                  child: Container(
-                                      padding: EdgeInsets.only(
-                                          left: 25.0, right: 25.0),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            'Keranjang Kosong',
-                                            style: GoogleFonts.montserrat(
-                                                fontSize: 18),
-                                          ),
-                                        ],
-                                      )),
+                                  child: Lottie.asset(
+                                    "./assets/lottie/cart_empty.json",
+                                    width: 340,
+                                    height: 300,
+                                  ),
+                                  // Container(
+                                  //     padding: EdgeInsets.only(
+                                  //         left: 25.0, right: 25.0),
+                                  //     child: Column(
+                                  //       mainAxisAlignment:
+                                  //           MainAxisAlignment.center,
+                                  //       crossAxisAlignment:
+                                  //           CrossAxisAlignment.center,
+                                  //       children: [
+                                  //         Text(
+                                  //           'Keranjang Kosong',
+                                  //           style: GoogleFonts.montserrat(
+                                  //               fontSize: 18),
+                                  //         ),
+                                  //       ],
+                                  //     )),
                                 ),
                               ),
                             ],

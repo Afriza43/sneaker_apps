@@ -119,7 +119,7 @@ class _ProfilePageState extends State<ProfilePage> {
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Text("Error: ${snapshot.error}");
-                } else if (snapshot.hasData) {
+                } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                   return Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Card(
@@ -140,7 +140,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              userList[0].fullName ?? "Unknown",
+                              snapshot.data![0].fullName ?? "Unknown",
                               style: TextStyle(
                                 fontSize: 18,
                                 color: Colors.black,
@@ -164,7 +164,7 @@ class _ProfilePageState extends State<ProfilePage> {
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Text("Error: ${snapshot.error}");
-                } else if (snapshot.hasData) {
+                } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                   return Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Card(
@@ -209,7 +209,7 @@ class _ProfilePageState extends State<ProfilePage> {
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Text("Error: ${snapshot.error}");
-                } else if (snapshot.hasData) {
+                } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                   return Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Card(

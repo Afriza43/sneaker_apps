@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bottom_bar/bottom_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sneaker_apps/cart.dart';
 import 'package:sneaker_apps/history.dart';
 import 'package:sneaker_apps/home.dart';
@@ -16,11 +17,20 @@ class BottomNavigation extends StatefulWidget {
 class _BottomNavigationState extends State<BottomNavigation> {
   late PageController _pageController;
   int _currentIndex = 0;
+  late SharedPreferences logindata;
+  late String username = "";
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: _currentIndex);
+  }
+
+  void initial() async {
+    SharedPreferences logindata = await SharedPreferences.getInstance();
+    setState(() {
+      username = logindata.getString('username') ?? "";
+    });
   }
 
   @override
